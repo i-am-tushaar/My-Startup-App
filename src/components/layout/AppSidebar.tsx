@@ -12,7 +12,8 @@ import {
   DollarSign,
   Users,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Info
 } from "lucide-react";
 
 import {
@@ -34,6 +35,7 @@ const mainNavItems = [
   { title: "AI Tutor", url: "/ai-tutor", icon: Brain },
   { title: "My Notes AI", url: "/my-notes", icon: Upload },
   { title: "Daily Quiz", url: "/quiz", icon: HelpCircle },
+  { title: "About the App Builder", url: "/about", icon: Info },
 ];
 
 const syllabusItems = [

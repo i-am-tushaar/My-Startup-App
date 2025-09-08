@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import CurrentAffairs from "./pages/CurrentAffairs";
 import AITutor from "./pages/AITutor";
 import MyNotes from "./pages/MyNotes";
+import About from "./pages/About";
 import NotFoundTopic from "./pages/NotFoundTopic";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/current-affairs" element={<CurrentAffairs />} />
               <Route path="/ai-tutor" element={<AITutor />} />
               <Route path="/my-notes" element={<MyNotes />} />
+              <Route path="/about" element={<About />} />
               <Route path="/quiz" element={<NotFoundTopic />} />
               
               {/* Syllabus Routes - All lead to NotFoundTopic for now */}
