@@ -1,7 +1,7 @@
 import { Moon, Sun, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/providers/ThemeProvider";
 
 export function TopBar() {
   const { theme, setTheme } = useTheme();
@@ -9,7 +9,7 @@ export function TopBar() {
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="md:hidden" />
+        <SidebarTrigger />
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">L</span>

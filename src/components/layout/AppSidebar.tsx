@@ -93,7 +93,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="w-72" collapsible="icon">
+    <Sidebar className="w-72" collapsible="icon" variant="sidebar">
       <SidebarContent className="p-2">
         {/* Main Navigation */}
         <SidebarGroup>
