@@ -85,7 +85,7 @@ export function AppSidebar() {
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
       ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-      : "hover:bg-accent hover:text-accent-foreground";
+      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
 
   const toggleSection = (section: string) => {
     setOpenSections(prev => ({
@@ -134,7 +134,7 @@ export function AppSidebar() {
                     onOpenChange={() => toggleSection(section.title)}
                   >
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton className="w-full justify-between hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                      <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                         <div className="flex items-center gap-2 min-w-0">
                           <BookOpen className="h-4 w-4 flex-shrink-0" />
                           <span className="font-medium text-sm truncate">{section.title}</span>
