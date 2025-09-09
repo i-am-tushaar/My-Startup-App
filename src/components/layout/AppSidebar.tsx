@@ -95,22 +95,22 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="w-72" collapsible="icon" variant="sidebar">
+    <Sidebar className="w-60 md:w-72" collapsible="icon" variant="sidebar">
       <SidebarContent className="p-2">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground mb-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/70 mb-2 px-2">
             Main Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} className={getNavCls}>
-                      <div className="flex items-center gap-2">
-                        <item.icon className="h-4 w-4" />
-                        <span className="font-medium">{item.title}</span>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <item.icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium text-sm truncate">{item.title}</span>
                       </div>
                     </NavLink>
                   </SidebarMenuButton>
@@ -122,11 +122,11 @@ export function AppSidebar() {
 
         {/* UPSC Syllabus */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground mb-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/70 mb-2 px-2">
             UPSC Syllabus
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {syllabusItems.map((section) => (
                 <SidebarMenuItem key={section.title}>
                   <Collapsible
@@ -134,12 +134,12 @@ export function AppSidebar() {
                     onOpenChange={() => toggleSection(section.title)}
                   >
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton className="w-full justify-between hover:bg-accent hover:text-accent-foreground">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="h-4 w-4" />
-                          <span className="font-medium">{section.title}</span>
+                      <SidebarMenuButton className="w-full justify-between hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <BookOpen className="h-4 w-4 flex-shrink-0" />
+                          <span className="font-medium text-sm truncate">{section.title}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center flex-shrink-0">
                           {openSections[section.title] ? 
                             <ChevronDown className="h-3 w-3" /> : 
                             <ChevronRight className="h-3 w-3" />
@@ -151,8 +151,10 @@ export function AppSidebar() {
                       {section.items.map((item) => (
                         <SidebarMenuButton key={item.title} asChild size="sm">
                           <NavLink to={item.url} className={getNavCls}>
-                            <item.icon className="h-3 w-3" />
-                            <span className="text-sm">{item.title}</span>
+                            <div className="flex items-center gap-2 min-w-0">
+                              <item.icon className="h-3 w-3 flex-shrink-0" />
+                              <span className="text-sm truncate">{item.title}</span>
+                            </div>
                           </NavLink>
                         </SidebarMenuButton>
                       ))}

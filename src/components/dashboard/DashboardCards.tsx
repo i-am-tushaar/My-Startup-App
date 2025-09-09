@@ -81,33 +81,33 @@ const statsCards = [
 
 export function DashboardCards() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Quick Access Cards */}
       <div>
-        <h2 className="section-title">
-          <Target className="h-6 w-6 text-primary" />
+        <h2 className="section-title text-lg md:text-2xl">
+          <Target className="h-5 w-5 md:h-6 md:w-6 text-primary" />
           Quick Access
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {dashboardCards.map((card) => (
             <Card key={card.title} className="learning-card group cursor-pointer overflow-hidden">
               <Link to={card.link}>
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 p-4 md:p-6">
                   <div className="flex items-center justify-between mb-2">
                     <div className={`p-2 rounded-lg bg-gradient-to-r ${card.color} text-white`}>
-                      <card.icon className="h-5 w-5" />
+                      <card.icon className="h-4 w-4 md:h-5 md:w-5" />
                     </div>
                     <Badge variant="secondary" className="text-xs">
                       {card.badge}
                     </Badge>
                   </div>
-                  <CardTitle className="text-lg font-semibold">{card.title}</CardTitle>
+                  <CardTitle className="text-base md:text-lg font-semibold">{card.title}</CardTitle>
                   <CardDescription className="text-sm">
                     {card.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button variant="ghost" className="w-full justify-between p-0 h-auto font-medium">
+                <CardContent className="p-4 md:p-6 pt-0">
+                  <Button variant="ghost" className="w-full justify-between p-0 h-auto font-medium text-sm">
                     Start Learning
                     <span className="text-primary">→</span>
                   </Button>
@@ -120,26 +120,26 @@ export function DashboardCards() {
 
       {/* Progress Stats */}
       <div>
-        <h2 className="section-title">
-          <TrendingUp className="h-6 w-6 text-success" />
+        <h2 className="section-title text-lg md:text-2xl">
+          <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-success" />
           Your Progress
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {statsCards.map((stat) => (
             <Card key={stat.title} className="learning-card">
-              <CardHeader className="pb-3">
+              <CardHeader className="pb-3 p-3 md:p-6">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                  <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
                     {stat.title}
                   </CardTitle>
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                  <stat.icon className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  <div className="text-lg md:text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground hidden sm:block">{stat.description}</p>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-3 md:p-6 pt-0">
                 <div className="text-xs text-success font-medium">
                   {stat.change}
                 </div>

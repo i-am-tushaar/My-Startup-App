@@ -62,42 +62,42 @@ export default function CurrentAffairs() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="section-title">
-            <Calendar className="h-8 w-8 text-primary" />
+          <h1 className="text-lg md:text-2xl font-bold text-foreground flex items-center gap-2 mb-2">
+            <Calendar className="h-6 w-6 md:h-8 md:w-8 text-primary" />
             Current Affairs Hub
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm md:text-base">
             Stay updated with UPSC-relevant news and analysis
           </p>
         </div>
-        <Button variant="outline" className="gap-2">
-          <ExternalLink className="h-4 w-4" />
+        <Button variant="outline" className="gap-2 text-sm">
+          <ExternalLink className="h-3 w-3 md:h-4 md:w-4" />
           View All Sources
         </Button>
       </div>
 
       {/* Current Affairs Cards */}
-      <div className="grid gap-6">
+      <div className="grid gap-4 md:gap-6">
         {currentAffairsData.map((article) => (
           <Card key={article.id} className="learning-card">
-            <CardHeader>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant={getImportanceBadgeVariant(article.importance)}>
+            <CardHeader className="p-4 md:p-6">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
+                    <Badge variant={getImportanceBadgeVariant(article.importance)} className="text-xs">
                       {article.importance} Priority
                     </Badge>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1 text-xs md:text-sm text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {new Date(article.date).toLocaleDateString()}
                     </div>
                   </div>
-                  <CardTitle className="text-xl mb-2">{article.title}</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
+                  <CardTitle className="text-lg md:text-xl mb-2 leading-tight">{article.title}</CardTitle>
+                  <CardDescription className="text-sm md:text-base leading-relaxed">
                     {article.summary}
                   </CardDescription>
                 </div>
@@ -107,29 +107,29 @@ export default function CurrentAffairs() {
               </div>
             </CardHeader>
             
-            <CardContent>
+            <CardContent className="p-4 md:p-6 pt-0">
               <div className="space-y-4">
                 {/* UPSC Relevance */}
                 <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <p className="text-sm font-medium text-primary mb-1">UPSC Relevance:</p>
-                  <p className="text-sm text-muted-foreground">{article.relevance}</p>
+                  <p className="text-xs md:text-sm font-medium text-primary mb-1">UPSC Relevance:</p>
+                  <p className="text-xs md:text-sm text-muted-foreground">{article.relevance}</p>
                 </div>
 
                 {/* Key Points */}
                 <div>
-                  <p className="text-sm font-medium mb-2">Key Points:</p>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm font-medium mb-2">Key Points:</p>
+                  <ul className="space-y-1 text-xs md:text-sm text-muted-foreground">
                     {article.keyPoints.map((point, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="w-1 h-1 bg-primary rounded-full mt-2 shrink-0"></span>
-                        {point}
+                        <span className="min-w-0">{point}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Tags and Actions */}
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
                   <div className="flex gap-1 flex-wrap">
                     {article.tags.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
@@ -138,12 +138,12 @@ export default function CurrentAffairs() {
                     ))}
                   </div>
                   
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="gap-1">
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <Button variant="outline" size="sm" className="gap-1 flex-1 sm:flex-none text-xs">
                       <HelpCircle className="h-3 w-3" />
                       Quiz
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="flex-1 sm:flex-none text-xs">
                       Read More
                     </Button>
                   </div>
@@ -156,7 +156,7 @@ export default function CurrentAffairs() {
 
       {/* Load More */}
       <div className="text-center">
-        <Button variant="outline" className="px-8">
+        <Button variant="outline" className="px-6 md:px-8 text-sm">
           Load More Articles
         </Button>
       </div>
