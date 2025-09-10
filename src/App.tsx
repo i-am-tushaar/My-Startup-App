@@ -15,6 +15,13 @@ import About from "./pages/About";
 import NotFoundTopic from "./pages/NotFoundTopic";
 import NotFound from "./pages/NotFound";
 
+// Syllabus Pages
+import History from "./pages/syllabus/History";
+import Geography from "./pages/syllabus/Geography";
+import Culture from "./pages/syllabus/Culture";
+import Polity from "./pages/syllabus/Polity";
+import Economy from "./pages/syllabus/Economy";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -33,7 +40,20 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/quiz" element={<NotFoundTopic />} />
               
-              {/* Syllabus Routes - All lead to NotFoundTopic for now */}
+              {/* Syllabus Routes - Specific Topics */}
+              <Route path="/syllabus/gs1/history" element={<History />} />
+              <Route path="/syllabus/gs1/geography" element={<Geography />} />
+              <Route path="/syllabus/gs1/culture" element={<Culture />} />
+              <Route path="/syllabus/gs2/polity" element={<Polity />} />
+              <Route path="/syllabus/gs2/social-justice" element={<NotFoundTopic />} />
+              <Route path="/syllabus/gs2/international" element={<NotFoundTopic />} />
+              <Route path="/syllabus/gs3/economy" element={<Economy />} />
+              <Route path="/syllabus/gs3/science" element={<NotFoundTopic />} />
+              <Route path="/syllabus/gs3/environment" element={<NotFoundTopic />} />
+              <Route path="/syllabus/gs4/ethics" element={<NotFoundTopic />} />
+              <Route path="/syllabus/gs4/case-studies" element={<NotFoundTopic />} />
+              
+              {/* Fallback for other syllabus routes */}
               <Route path="/syllabus/:paper/:topic" element={<NotFoundTopic />} />
               
               {/* Catch-all route */}

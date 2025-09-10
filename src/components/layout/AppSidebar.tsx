@@ -104,10 +104,16 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {mainNavItems.map((item) => (
+{mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavCls}>
+                    <NavLink to={item.url} className={({ isActive }) => 
+                      `flex items-center gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                        isActive 
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      }`
+                    }>
                       <div className="flex items-center gap-2 min-w-0">
                         <item.icon className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                         <span className="font-medium text-xs sm:text-sm truncate">{item.title}</span>
@@ -134,15 +140,15 @@ export function AppSidebar() {
                     onOpenChange={() => toggleSection(section.title)}
                   >
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                      <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-all duration-200">
                         <div className="flex items-center gap-2 min-w-0">
                           <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                           <span className="font-medium text-xs sm:text-sm truncate">{section.title}</span>
                         </div>
                         <div className="flex items-center flex-shrink-0">
                           {openSections[section.title] ? 
-                            <ChevronDown className="h-2 w-2 sm:h-3 sm:w-3" /> : 
-                            <ChevronRight className="h-2 w-2 sm:h-3 sm:w-3" />
+                            <ChevronDown className="h-2 w-2 sm:h-3 sm:w-3 transition-transform duration-200" /> : 
+                            <ChevronRight className="h-2 w-2 sm:h-3 sm:w-3 transition-transform duration-200" />
                           }
                         </div>
                       </SidebarMenuButton>
@@ -150,7 +156,13 @@ export function AppSidebar() {
                     <CollapsibleContent className="ml-2 sm:ml-4 mt-1 space-y-1">
                       {section.items.map((item) => (
                         <SidebarMenuButton key={item.title} asChild size="sm">
-                          <NavLink to={item.url} className={getNavCls}>
+                          <NavLink to={item.url} className={({ isActive }) => 
+                            `flex items-center gap-1 sm:gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                              isActive 
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            }`
+                          }>
                             <div className="flex items-center gap-1 sm:gap-2 min-w-0">
                               <item.icon className="h-2 w-2 sm:h-3 sm:w-3 flex-shrink-0" />
                               <span className="text-xs sm:text-sm truncate">{item.title}</span>

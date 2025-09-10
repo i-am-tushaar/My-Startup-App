@@ -90,30 +90,30 @@ export function DashboardCards() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {dashboardCards.map((card) => (
-            <Card key={card.title} className="learning-card group cursor-pointer overflow-hidden">
-              <Link to={card.link}>
+            <Link key={card.title} to={card.link} className="block group">
+              <Card className="learning-card cursor-pointer overflow-hidden h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
                 <CardHeader className="pb-3 p-4 md:p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <div className={`p-2 rounded-lg bg-gradient-to-r ${card.color} text-white`}>
+                    <div className={`p-2 rounded-lg bg-gradient-to-r ${card.color} text-white transition-transform duration-200 group-hover:scale-110`}>
                       <card.icon className="h-4 w-4 md:h-5 md:w-5" />
                     </div>
                     <Badge variant="secondary" className="text-xs">
                       {card.badge}
                     </Badge>
                   </div>
-                  <CardTitle className="text-base md:text-lg font-semibold">{card.title}</CardTitle>
+                  <CardTitle className="text-base md:text-lg font-semibold group-hover:text-primary transition-colors">{card.title}</CardTitle>
                   <CardDescription className="text-sm">
                     {card.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6 pt-0">
-                  <Button variant="ghost" className="w-full justify-between p-0 h-auto font-medium text-sm">
+                  <Button variant="ghost" className="w-full justify-between p-0 h-auto font-medium text-sm group-hover:text-primary transition-colors">
                     Start Learning
-                    <span className="text-primary">→</span>
+                    <span className="text-primary transform transition-transform group-hover:translate-x-1">→</span>
                   </Button>
                 </CardContent>
-              </Link>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
@@ -126,7 +126,7 @@ export function DashboardCards() {
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {statsCards.map((stat) => (
-            <Card key={stat.title} className="learning-card">
+            <Card key={stat.title} className="learning-card cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
               <CardHeader className="pb-3 p-3 md:p-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
