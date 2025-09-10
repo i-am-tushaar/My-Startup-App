@@ -95,11 +95,11 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="w-60 md:w-72" collapsible="icon" variant="sidebar">
-      <SidebarContent className="p-2">
+    <Sidebar className="w-48 sm:w-60 md:w-72" collapsible="icon" variant="sidebar">
+      <SidebarContent className="p-1 sm:p-2">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/70 mb-2 px-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/80 mb-2 px-1 sm:px-2">
             Main Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -109,8 +109,8 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} className={getNavCls}>
                       <div className="flex items-center gap-2 min-w-0">
-                        <item.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium text-sm truncate">{item.title}</span>
+                        <item.icon className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                        <span className="font-medium text-xs sm:text-sm truncate">{item.title}</span>
                       </div>
                     </NavLink>
                   </SidebarMenuButton>
@@ -122,7 +122,7 @@ export function AppSidebar() {
 
         {/* UPSC Syllabus */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/70 mb-2 px-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/80 mb-2 px-1 sm:px-2">
             UPSC Syllabus
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -136,24 +136,24 @@ export function AppSidebar() {
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                         <div className="flex items-center gap-2 min-w-0">
-                          <BookOpen className="h-4 w-4 flex-shrink-0" />
-                          <span className="font-medium text-sm truncate">{section.title}</span>
+                          <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                          <span className="font-medium text-xs sm:text-sm truncate">{section.title}</span>
                         </div>
                         <div className="flex items-center flex-shrink-0">
                           {openSections[section.title] ? 
-                            <ChevronDown className="h-3 w-3" /> : 
-                            <ChevronRight className="h-3 w-3" />
+                            <ChevronDown className="h-2 w-2 sm:h-3 sm:w-3" /> : 
+                            <ChevronRight className="h-2 w-2 sm:h-3 sm:w-3" />
                           }
                         </div>
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                    <CollapsibleContent className="ml-2 sm:ml-4 mt-1 space-y-1">
                       {section.items.map((item) => (
                         <SidebarMenuButton key={item.title} asChild size="sm">
                           <NavLink to={item.url} className={getNavCls}>
-                            <div className="flex items-center gap-2 min-w-0">
-                              <item.icon className="h-3 w-3 flex-shrink-0" />
-                              <span className="text-sm truncate">{item.title}</span>
+                            <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+                              <item.icon className="h-2 w-2 sm:h-3 sm:w-3 flex-shrink-0" />
+                              <span className="text-xs sm:text-sm truncate">{item.title}</span>
                             </div>
                           </NavLink>
                         </SidebarMenuButton>
