@@ -13,7 +13,8 @@ import {
   Users,
   ChevronDown,
   ChevronRight,
-  Info
+  Info,
+  PenTool
 } from "lucide-react";
 
 import {
@@ -31,6 +32,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 const mainNavItems = [
   { title: "Dashboard", url: "/", icon: Home },
+  { title: "Complete Syllabus", url: "/syllabus", icon: BookOpen },
+  { title: "Answer Writing", url: "/answer-writing", icon: PenTool },
   { title: "Current Affairs", url: "/current-affairs", icon: Newspaper },
   { title: "AI Tutor", url: "/ai-tutor", icon: Brain },
   { title: "My Notes AI", url: "/my-notes", icon: Upload },

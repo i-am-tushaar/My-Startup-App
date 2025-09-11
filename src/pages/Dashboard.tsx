@@ -1,7 +1,8 @@
 import { DashboardCards } from "@/components/dashboard/DashboardCards";
-import { Sparkles, Calendar, Trophy } from "lucide-react";
+import { Sparkles, Calendar, Trophy, BookOpen } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-education.jpg";
 
 export default function Dashboard() {
@@ -37,17 +38,23 @@ export default function Dashboard() {
                 <p className="text-white/90 mb-3 sm:mb-4 text-xs sm:text-sm md:text-base leading-relaxed">
                   Master the UPSC syllabus with AI-powered learning tools, personalized study plans, and comprehensive exam preparation.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                  <Button className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm md:text-base px-3 sm:px-4 py-2">
-                    Start Learning
-                  </Button>
-                  <Button 
-                    variant="secondary" 
-                    className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm md:text-base px-3 sm:px-4 py-2"
-                  >
-                    Take Quick Quiz
-                  </Button>
-                </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Button asChild className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm md:text-base px-3 sm:px-4 py-2">
+            <Link to="/syllabus">
+              <BookOpen className="h-4 w-4 mr-2" />
+              Complete Syllabus
+            </Link>
+          </Button>
+          <Button 
+            asChild
+            variant="secondary" 
+            className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm md:text-base px-3 sm:px-4 py-2"
+          >
+            <Link to="/answer-writing">
+              Answer Writing Practice
+            </Link>
+          </Button>
+        </div>
               </div>
               
               <div className="space-y-2 sm:space-y-3 mt-3 sm:mt-4 lg:mt-0">

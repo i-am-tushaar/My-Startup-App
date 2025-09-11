@@ -12,6 +12,8 @@ import CurrentAffairs from "./pages/CurrentAffairs";
 import AITutor from "./pages/AITutor";
 import MyNotes from "./pages/MyNotes";
 import About from "./pages/About";
+import Syllabus from "./pages/Syllabus";
+import AnswerWriting from "./pages/AnswerWriting";
 import NotFoundTopic from "./pages/NotFoundTopic";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +36,8 @@ const App = () => (
           <AppLayout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/syllabus" element={<Syllabus />} />
+              <Route path="/answer-writing" element={<AnswerWriting />} />
               <Route path="/current-affairs" element={<CurrentAffairs />} />
               <Route path="/ai-tutor" element={<AITutor />} />
               <Route path="/my-notes" element={<MyNotes />} />
@@ -52,6 +56,15 @@ const App = () => (
               <Route path="/syllabus/gs3/environment" element={<NotFoundTopic />} />
               <Route path="/syllabus/gs4/ethics" element={<NotFoundTopic />} />
               <Route path="/syllabus/gs4/case-studies" element={<NotFoundTopic />} />
+              
+              {/* Interview Routes */}
+              <Route path="/interview/*" element={<NotFoundTopic />} />
+              
+              {/* Prelims Routes */}
+              <Route path="/syllabus/prelims/*" element={<NotFoundTopic />} />
+              
+              {/* Answer Writing Routes */}
+              <Route path="/answer-writing/*" element={<AnswerWriting />} />
               
               {/* Fallback for other syllabus routes */}
               <Route path="/syllabus/:paper/:topic" element={<NotFoundTopic />} />
