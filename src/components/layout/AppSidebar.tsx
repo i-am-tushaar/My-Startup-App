@@ -98,25 +98,25 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="w-48 sm:w-60 md:w-72" collapsible="icon" variant="sidebar">
-      <SidebarContent className="p-1 sm:p-2">
+    <Sidebar className="w-48 sm:w-60 md:w-72 bg-sidebar border-r border-sidebar-border" collapsible="icon" variant="sidebar">
+      <SidebarContent className="p-1 sm:p-2 bg-sidebar">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/80 mb-2 px-1 sm:px-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground mb-2 px-1 sm:px-2">
             Main Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
 {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={({ isActive }) => 
-                      `flex items-center gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
-                        isActive 
-                          ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                      }`
-                    }>
+                   <SidebarMenuButton asChild>
+                     <NavLink to={item.url} className={({ isActive }) => 
+                       `flex items-center gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                         isActive 
+                           ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm" 
+                           : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                       }`
+                     }>
                       <div className="flex items-center gap-2 min-w-0">
                         <item.icon className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                         <span className="font-medium text-xs sm:text-sm truncate">{item.title}</span>
@@ -131,7 +131,7 @@ export function AppSidebar() {
 
         {/* UPSC Syllabus */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground/80 mb-2 px-1 sm:px-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-sidebar-foreground mb-2 px-1 sm:px-2">
             UPSC Syllabus
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -143,7 +143,7 @@ export function AppSidebar() {
                     onOpenChange={() => toggleSection(section.title)}
                   >
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-all duration-200">
+                      <SidebarMenuButton className="w-full justify-between text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer transition-all duration-200 font-medium">
                         <div className="flex items-center gap-2 min-w-0">
                           <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                           <span className="font-medium text-xs sm:text-sm truncate">{section.title}</span>
@@ -162,7 +162,7 @@ export function AppSidebar() {
                           <NavLink to={item.url} className={({ isActive }) => 
                             `flex items-center gap-1 sm:gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
                               isActive 
-                                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm" 
                                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                             }`
                           }>
