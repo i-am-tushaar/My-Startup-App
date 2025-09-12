@@ -2,6 +2,7 @@ import { ArrowLeft, User, Target, Users, Brain, BookOpen, BarChart3, Lightbulb, 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import profilePic from "@/assets/profile-pic.png";
 
 export default function About() {
   return (
@@ -19,8 +20,12 @@ export default function About() {
         {/* Header Section */}
         <div className="mb-8 md:mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg md:text-xl">TC</span>
+            <div className="relative w-12 h-12 md:w-16 md:h-16">
+              <img 
+                src={profilePic} 
+                alt="Tushar Choudhary"
+                className="w-full h-full object-cover rounded-full border-2 border-primary/20 shadow-md"
+              />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">About the App Builder</h1>
@@ -35,8 +40,13 @@ export default function About() {
           <Card className="learning-card h-fit">
             <CardContent className="p-4 md:p-8">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 md:w-24 md:h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-primary-foreground font-bold text-xl md:text-2xl">TC</span>
+                <div className="relative w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 mx-auto mb-4">
+                  <img 
+                    src={profilePic} 
+                    alt="Tushar Choudhary - Creator of LAKSHYA AI"
+                    className="w-full h-full object-cover rounded-full border-4 border-primary/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 via-transparent to-transparent"></div>
                 </div>
                 <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Tushar Choudhary</h2>
                 <p className="text-primary font-medium mb-4 text-sm md:text-base">🔧 Developer & Creator</p>
