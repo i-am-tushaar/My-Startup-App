@@ -66,6 +66,14 @@ const App = () => (
               {/* Answer Writing Routes */}
               <Route path="/answer-writing/*" element={<AnswerWriting />} />
               
+              {/* Progress & Analytics Routes */}
+              <Route path="/streak-tracker" element={<NotFoundTopic />} />
+              <Route path="/progress-tracker" element={<NotFoundTopic />} />
+              <Route path="/quiz-analytics" element={<NotFoundTopic />} />
+              <Route path="/time-tracker" element={<NotFoundTopic />} />
+              <Route path="/daily-goals" element={<NotFoundTopic />} />
+              <Route path="/achievements" element={<NotFoundTopic />} />
+              
               {/* Fallback for other syllabus routes */}
               <Route path="/syllabus/:paper/:topic" element={<NotFoundTopic />} />
               

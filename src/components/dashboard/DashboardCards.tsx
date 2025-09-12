@@ -54,28 +54,32 @@ const statsCards = [
     value: "7 Days",
     description: "Keep it up!",
     icon: TrendingUp,
-    change: "+2 from last week"
+    change: "+2 from last week",
+    link: "/streak-tracker"
   },
   {
     title: "Topics Covered",
     value: "23/127",
     description: "18% Complete",
     icon: Target,
-    change: "+5 this week"
+    change: "+5 this week",
+    link: "/progress-tracker"
   },
   {
     title: "Quiz Score",
     value: "78%",
     description: "Average accuracy",
     icon: HelpCircle,
-    change: "+12% improvement"
+    change: "+12% improvement",
+    link: "/quiz-analytics"
   },
   {
     title: "Study Time",
     value: "4.2 hrs",
     description: "Today's session",
     icon: Clock,
-    change: "Goal: 6 hours"
+    change: "Goal: 6 hours",
+    link: "/time-tracker"
   }
 ];
 
@@ -126,25 +130,27 @@ export function DashboardCards() {
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {statsCards.map((stat) => (
-            <Card key={stat.title} className="learning-card cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-              <CardHeader className="pb-3 p-3 md:p-6">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
-                    {stat.title}
-                  </CardTitle>
-                  <stat.icon className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-lg md:text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground hidden sm:block">{stat.description}</p>
-                </div>
-              </CardHeader>
-              <CardContent className="p-3 md:p-6 pt-0">
-                <div className="text-xs text-success font-medium">
-                  {stat.change}
-                </div>
-              </CardContent>
-            </Card>
+            <Link key={stat.title} to={stat.link} className="block group">
+              <Card className="learning-card cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group-hover:border-primary/20">
+                <CardHeader className="pb-3 p-3 md:p-6">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+                      {stat.title}
+                    </CardTitle>
+                    <stat.icon className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-lg md:text-2xl font-bold group-hover:text-primary transition-colors">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground hidden sm:block">{stat.description}</p>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-3 md:p-6 pt-0">
+                  <div className="text-xs text-success font-medium">
+                    {stat.change}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

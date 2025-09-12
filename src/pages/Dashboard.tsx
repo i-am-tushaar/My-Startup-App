@@ -58,21 +58,25 @@ export default function Dashboard() {
               </div>
               
               <div className="space-y-2 sm:space-y-3 mt-3 sm:mt-4 lg:mt-0">
-                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-white flex-shrink-0" />
-                  <div className="text-xs sm:text-sm text-white min-w-0">
-                    <p className="font-medium">Daily Goal Progress</p>
-                    <p className="text-white/80 text-xs">4.2/6 hours completed today</p>
+                <Link to="/daily-goals" className="block group">
+                  <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 cursor-pointer transition-all duration-200 hover:bg-white/20 hover:scale-105">
+                    <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-white flex-shrink-0" />
+                    <div className="text-xs sm:text-sm text-white min-w-0">
+                      <p className="font-medium">Daily Goal Progress</p>
+                      <p className="text-white/80 text-xs">4.2/6 hours completed today</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
                 
-                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                  <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-white flex-shrink-0" />
-                  <div className="text-xs sm:text-sm text-white min-w-0">
-                    <p className="font-medium">Weekly Achievement</p>
-                    <p className="text-white/80 text-xs">7-day study streak!</p>
+                <Link to="/achievements" className="block group">
+                  <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 cursor-pointer transition-all duration-200 hover:bg-white/20 hover:scale-105">
+                    <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-white flex-shrink-0" />
+                    <div className="text-xs sm:text-sm text-white min-w-0">
+                      <p className="font-medium">Weekly Achievement</p>
+                      <p className="text-white/80 text-xs">7-day study streak!</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </CardContent>
