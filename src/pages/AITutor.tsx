@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Brain, 
   Send, 
@@ -11,8 +12,20 @@ import {
   MessageSquare,
   Sparkles,
   Clock,
-  Star
+  Star,
+  Bot,
+  User
 } from "lucide-react";
+
+// Webhook configuration - easy to change for production
+const WEBHOOK_URL = "http://localhost:5678/webhook-test/lakshyaAI";
+
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+}
 
 const quickQuestions = [
   "Explain the concept of Fundamental Rights in simple terms",
@@ -23,36 +36,86 @@ const quickQuestions = [
   "Describe the structure of Indian Parliament"
 ];
 
-const chatHistory = [
-  {
-    id: 1,
-    question: "What is the significance of Article 370?",
-    answer: "Article 370 was a provision in the Indian Constitution that granted special autonomous status to Jammu and Kashmir. It allowed the state to have its own constitution and limited the power of the Indian Parliament to make laws for the state, except in matters of defense, foreign affairs, and communications.",
-    timestamp: "2024-01-15 10:30 AM",
-    topic: "Polity"
-  },
-  {
-    id: 2,
-    question: "Explain the Green Revolution in India",
-    answer: "The Green Revolution was a period of agricultural transformation in India during the 1960s-70s. It involved the adoption of high-yielding variety seeds, modern irrigation techniques, fertilizers, and pesticides. This led to significant increase in food grain production, particularly wheat and rice.",
-    timestamp: "2024-01-14 2:15 PM",
-    topic: "Economy"
-  }
-];
-
 export default function AITutor() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      type: 'ai',
+      content: 'Hello! I\'m your AI Tutor powered by advanced AI. I can help you understand UPSC topics, explain concepts, and answer your questions. How can I assist you today?',
+      timestamp: new Date()
+    }
+  ]);
+  const { toast } = useToast();
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) return;
     
+    // Add user message to chat
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: message,
+      timestamp: new Date()
+    };
+    
+    setChatMessages(prev => [...prev, userMessage]);
+    const currentMessage = message;
+    setMessage("");
     setIsLoading(true);
-    // Simulate AI response
-    setTimeout(() => {
+
+    try {
+      // Send to n8n webhook
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          timestamp: new Date().toISOString(),
+          source: 'lakshya-ai-tutor'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Add AI response to chat
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: data.response || data.message || 'I received your message and I\'m processing it.',
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, aiMessage]);
+      
+    } catch (error) {
+      console.error('Error connecting to AI tutor:', error);
+      
+      // Add error message to chat
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'The AI tutor is unavailable right now. Please try again later.',
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Connection Error",
+        description: "Unable to connect to AI tutor. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      setMessage("");
-    }, 2000);
+    }
   };
 
   const handleQuickQuestion = (question: string) => {
@@ -112,35 +175,51 @@ export default function AITutor() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4 min-h-[400px] max-h-[500px] overflow-y-auto mb-4">
-                {chatHistory.map((chat) => (
+                {chatMessages.map((chat) => (
                   <div key={chat.id} className="space-y-3">
-                    {/* User Question */}
-                    <div className="flex justify-end">
-                      <div className="bg-primary text-primary-foreground p-3 rounded-lg max-w-[80%] text-sm">
-                        {chat.question}
-                      </div>
-                    </div>
-                    
-                    {/* AI Answer */}
-                    <div className="flex justify-start">
-                      <div className="bg-muted p-3 rounded-lg max-w-[80%] space-y-2">
-                        <div className="text-sm">{chat.answer}</div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Badge variant="outline" className="text-xs">{chat.topic}</Badge>
-                          <Clock className="h-3 w-3" />
-                          <span>{chat.timestamp}</span>
+                    <div className={`flex gap-3 ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      {chat.type === 'ai' && (
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-4 w-4 text-primary" />
+                        </div>
+                      )}
+                      
+                      <div className={`max-w-[80%] rounded-lg p-3 ${
+                        chat.type === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted'
+                      }`}>
+                        <div className="text-sm whitespace-pre-wrap">{chat.content}</div>
+                        <div className="text-xs opacity-70 mt-1">
+                          {chat.timestamp.toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
                         </div>
                       </div>
+
+                      {chat.type === 'user' && (
+                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                          <User className="h-4 w-4" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
                 
                 {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        AI is thinking...
+                  <div className="flex gap-3 justify-start">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Bot className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="bg-muted rounded-lg p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">AI is thinking...</span>
                       </div>
                     </div>
                   </div>
@@ -153,7 +232,13 @@ export default function AITutor() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Ask me anything about UPSC topics..."
-                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  disabled={isLoading}
                   className="flex-1"
                 />
                 <Button 
