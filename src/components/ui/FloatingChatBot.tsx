@@ -37,6 +37,38 @@ export function FloatingChatBot() {
     "Election process"
   ];
 
+  // Formats n8n structured responses into a readable chat message
+  const formatN8nResponse = (data: any): string => {
+    try {
+      if (typeof data === "string") return data;
+      if (typeof data?.response === "string") return data.response;
+      if (typeof data?.message === "string") return data.message;
+
+      const topic = data?.topic;
+      const explanation = data?.explanation;
+      const keyPoints = Array.isArray(data?.key_points) ? data.key_points : [];
+      const related = Array.isArray(data?.related_concepts) ? data.related_concepts : [];
+
+      if (topic || explanation || keyPoints.length || related.length) {
+        const lines: string[] = [];
+        if (topic) lines.push(`Topic: ${topic}`);
+        if (explanation) lines.push(`\n${explanation}`);
+        if (keyPoints.length) {
+          lines.push("\nKey Points:");
+          for (const p of keyPoints) lines.push(`• ${String(p)}`);
+        }
+        if (related.length) {
+          lines.push("\nRelated Concepts:");
+          for (const r of related) lines.push(`• ${String(r)}`);
+        }
+        return lines.join("\n");
+      }
+    } catch (e) {
+      // no-op, fallback below
+    }
+    return "I received your message and I'm processing it.";
+  };
+
   const handleSend = async () => {
     if (!message.trim()) return;
     
@@ -72,12 +104,14 @@ export function FloatingChatBot() {
       }
 
       const data = await response.json();
+
+      const aiContent = formatN8nResponse(data);
       
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: data.response || data.message || 'I received your message and I\'m processing it.',
+        content: aiContent,
         timestamp: new Date()
       };
       
@@ -140,11 +174,13 @@ export function FloatingChatBot() {
 
       const data = await response.json();
       
+      const aiContent = formatN8nResponse(data);
+      
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: data.response || data.message || 'I received your message and I\'m processing it.',
+        content: aiContent,
         timestamp: new Date()
       };
       
