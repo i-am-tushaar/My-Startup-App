@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useNavigate } from "react-router-dom";
+import { useAITutorContext } from "@/contexts/AITutorContext";
 
 const syllabusData = {
   prelims: {
@@ -161,6 +162,7 @@ const syllabusData = {
 
 export default function Syllabus() {
   const navigate = useNavigate();
+  const { askAIQuestion } = useAITutorContext();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     prelims: true,
     mains: false,
@@ -259,16 +261,21 @@ export default function Syllabus() {
                           {topic.items.map((item: any, itemIndex: number) => (
                             <div 
                               key={itemIndex}
-                              className="flex items-center justify-between p-2 rounded hover:bg-muted/20 cursor-pointer transition-colors"
-                              onClick={() => navigate(item.url)}
+                              className="flex items-center justify-between p-2 rounded hover:bg-muted/20 cursor-pointer transition-colors group"
+                              onClick={() => {
+                                askAIQuestion(`Explain ${item.name} in detail for UPSC ${key === 'prelims' ? 'Prelims' : key === 'mains' ? 'Mains' : 'Interview'} preparation. Include key topics, important facts, and study tips.`);
+                              }}
                             >
                               <div className="flex items-center gap-2">
                                 <div className={`w-2 h-2 rounded-full ${item.completed ? 'bg-success' : 'bg-muted-foreground'}`} />
-                                <span className={`text-sm ${item.completed ? 'text-success' : ''}`}>
+                                <span className={`text-sm ${item.completed ? 'text-success' : ''} group-hover:text-primary transition-colors`}>
                                   {item.name}
                                 </span>
                               </div>
-                              {item.completed && <Star className="h-3 w-3 text-success fill-current" />}
+                              <div className="flex items-center gap-1">
+                                {item.completed && <Star className="h-3 w-3 text-success fill-current" />}
+                                <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">Ask AI</span>
+                              </div>
                             </div>
                           ))}
                         </div>

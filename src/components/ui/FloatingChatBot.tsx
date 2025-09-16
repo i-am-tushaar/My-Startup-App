@@ -1,34 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAITutorContext } from "@/contexts/AITutorContext";
+import { useAITutor, ChatMessage } from "@/hooks/useAITutor";
 
 // Webhook configuration - easy to change for production
 const WEBHOOK_URL = "http://localhost:5678/webhook-test/lakshyaAI";
 
-interface ChatMessage {
-  id: string;
-  type: 'user' | 'ai';
-  content: string;
-  timestamp: Date;
-}
-
 export function FloatingChatBot() {
-  const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    {
-      id: '1',
-      type: 'ai',
-      content: '👋 Hi! I\'m your AI tutor. Ask me anything about UPSC topics!',
-      timestamp: new Date()
-    }
-  ]);
   const { toast } = useToast();
+  const { sendQuestionToAI, isLoading } = useAITutor();
+  const { 
+    chatMessages, 
+    addMessage, 
+    isFloatingChatOpen, 
+    setIsFloatingChatOpen 
+  } = useAITutorContext();
 
   const quickActions = [
     "Explain GDP vs GNP",
@@ -69,6 +61,36 @@ export function FloatingChatBot() {
     return "I received your message and I'm processing it.";
   };
 
+  // Handle automatic sending for questions added from outside
+  useEffect(() => {
+    const lastMessage = chatMessages[chatMessages.length - 1];
+    if (lastMessage?.type === 'user' && !isLoading && !message) {
+      handleAutoSend(lastMessage.content);
+    }
+  }, [chatMessages]);
+
+  const handleAutoSend = async (question: string) => {
+    const result = await sendQuestionToAI(question);
+    
+    if (result.success && result.response) {
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: result.response,
+        timestamp: new Date()
+      };
+      addMessage(aiMessage);
+    } else if (result.error) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: result.error,
+        timestamp: new Date()
+      };
+      addMessage(errorMessage);
+    }
+  };
+
   const handleSend = async () => {
     if (!message.trim()) return;
     
@@ -80,70 +102,15 @@ export function FloatingChatBot() {
       timestamp: new Date()
     };
     
-    setChatMessages(prev => [...prev, userMessage]);
+    addMessage(userMessage);
     const currentMessage = message;
     setMessage("");
-    setIsLoading(true);
-
-    try {
-      // Send to n8n webhook
-      const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: currentMessage,
-          timestamp: new Date().toISOString(),
-          source: 'lakshya-ai-tutor-floating'
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      const aiContent = formatN8nResponse(data);
-      
-      // Add AI response to chat
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: aiContent,
-        timestamp: new Date()
-      };
-      
-      setChatMessages(prev => [...prev, aiMessage]);
-      
-    } catch (error) {
-      console.error('Error connecting to AI tutor:', error);
-      
-      // Add error message to chat
-      const errorMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: 'The AI tutor is unavailable right now. Please try again later.',
-        timestamp: new Date()
-      };
-      
-      setChatMessages(prev => [...prev, errorMessage]);
-      
-      toast({
-        title: "Connection Error",
-        description: "Unable to connect to AI tutor. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    
+    // Send to AI
+    await handleAutoSend(currentMessage);
   };
 
   const handleQuickQuestion = async (question: string) => {
-    setMessage(question);
-    
-    // Automatically send the quick question
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
@@ -151,69 +118,14 @@ export function FloatingChatBot() {
       timestamp: new Date()
     };
     
-    setChatMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-
-    try {
-      // Send to n8n webhook
-      const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: question,
-          timestamp: new Date().toISOString(),
-          source: 'lakshya-ai-tutor-floating'
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      const aiContent = formatN8nResponse(data);
-      
-      // Add AI response to chat
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: aiContent,
-        timestamp: new Date()
-      };
-      
-      setChatMessages(prev => [...prev, aiMessage]);
-      
-    } catch (error) {
-      console.error('Error connecting to AI tutor:', error);
-      
-      // Add error message to chat
-      const errorMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: 'The AI tutor is unavailable right now. Please try again later.',
-        timestamp: new Date()
-      };
-      
-      setChatMessages(prev => [...prev, errorMessage]);
-      
-      toast({
-        title: "Connection Error",
-        description: "Unable to connect to AI tutor. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-      setMessage(""); // Clear input after sending
-    }
+    addMessage(userMessage);
+    await handleAutoSend(question);
   };
 
   return (
     <>
       {/* Chat Window */}
-      {isOpen && (
+      {isFloatingChatOpen && (
         <Card className="fixed bottom-20 right-4 w-80 h-96 z-50 shadow-strong border-primary/20">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
@@ -225,7 +137,7 @@ export function FloatingChatBot() {
                 variant="ghost"
                 size="icon"
                 className="w-6 h-6"
-                onClick={() => setIsOpen(false)}
+                onClick={() => setIsFloatingChatOpen(false)}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -329,7 +241,7 @@ export function FloatingChatBot() {
       {/* Floating Button */}
       <Button
         className="fixed bottom-4 right-4 w-14 h-14 rounded-full shadow-strong gradient-primary text-white hover:opacity-90 z-40"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
       >
         <MessageSquare className="h-6 w-6" />
       </Button>

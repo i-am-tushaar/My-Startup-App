@@ -73,7 +73,7 @@ export default function AITutor() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: currentMessage,
+          question: currentMessage,
           timestamp: new Date().toISOString(),
           source: 'lakshya-ai-tutor'
         }),
@@ -89,7 +89,7 @@ export default function AITutor() {
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: data.response || data.message || 'I received your message and I\'m processing it.',
+        content: data.answer || data.response || data.message || 'I received your message and I\'m processing it.',
         timestamp: new Date()
       };
       
@@ -118,8 +118,70 @@ export default function AITutor() {
     }
   };
 
-  const handleQuickQuestion = (question: string) => {
-    setMessage(question);
+  const handleQuickQuestion = async (question: string) => {
+    // Add user message to chat
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: question,
+      timestamp: new Date()
+    };
+    
+    setChatMessages(prev => [...prev, userMessage]);
+    setMessage("");
+    setIsLoading(true);
+
+    try {
+      // Send to n8n webhook
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question,
+          timestamp: new Date().toISOString(),
+          source: 'lakshya-ai-tutor'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Add AI response to chat
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: data.answer || data.response || data.message || 'I received your message and I\'m processing it.',
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, aiMessage]);
+      
+    } catch (error) {
+      console.error('Error connecting to AI tutor:', error);
+      
+      // Add error message to chat
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'The AI tutor is unavailable right now. Please try again later.',
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Connection Error",
+        description: "Unable to connect to AI tutor. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
