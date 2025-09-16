@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useAITutorContext } from "@/contexts/AITutorContext";
 import {
   BookOpen,
   Newspaper,
@@ -78,7 +77,6 @@ const syllabusItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { askAIQuestion } = useAITutorContext();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     "General Studies 1": true,
     "General Studies 2": false,
@@ -161,17 +159,18 @@ export function AppSidebar() {
                     <CollapsibleContent className="ml-2 sm:ml-4 mt-1 space-y-1">
                       {section.items.map((item) => (
                         <SidebarMenuButton key={item.title} asChild size="sm">
-                          <div
-                            className="flex items-center gap-1 sm:gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                            onClick={() => {
-                              askAIQuestion(`Explain ${item.title} in detail for UPSC preparation`);
-                            }}
-                          >
+                          <NavLink to={item.url} className={({ isActive }) => 
+                            `flex items-center gap-1 sm:gap-2 min-w-0 p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                              isActive 
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm" 
+                                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            }`
+                          }>
                             <div className="flex items-center gap-1 sm:gap-2 min-w-0">
                               <item.icon className="h-2 w-2 sm:h-3 sm:w-3 flex-shrink-0" />
                               <span className="text-xs sm:text-sm truncate">{item.title}</span>
                             </div>
-                          </div>
+                          </NavLink>
                         </SidebarMenuButton>
                       ))}
                     </CollapsibleContent>
