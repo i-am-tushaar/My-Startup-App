@@ -15,6 +15,14 @@ import { Badge } from "@/components/ui/badge";
 
 const dashboardCards = [
   {
+    title: "UPSC Predictor AI",
+    description: "AI-powered predictions for UPSC CSE 2025 trends",
+    icon: TrendingUp,
+    link: "/upsc-predictor",
+    badge: "🔮 NEW",
+    color: "from-indigo-500 to-purple-600"
+  },
+  {
     title: "UPSC Syllabus Explorer",
     description: "Comprehensive topic-wise study materials",
     icon: BookOpen,
@@ -92,7 +100,7 @@ export function DashboardCards() {
           <Target className="h-5 w-5 md:h-6 md:w-6 text-primary" />
           Quick Access
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
           {dashboardCards.map((card) => (
             <Link key={card.title} to={card.link} className="block group">
               <Card className="learning-card cursor-pointer overflow-hidden h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">

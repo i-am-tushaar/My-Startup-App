@@ -14,7 +14,8 @@ import {
   ChevronDown,
   ChevronRight,
   Info,
-  PenTool
+  PenTool,
+  TrendingUp
 } from "lucide-react";
 
 import {
@@ -38,6 +39,7 @@ const mainNavItems = [
   { title: "AI Tutor", url: "/ai-tutor", icon: Brain },
   { title: "My Notes AI", url: "/my-notes", icon: Upload },
   { title: "Daily Quiz", url: "/quiz", icon: HelpCircle },
+  { title: "UPSC Predictor AI", url: "/upsc-predictor", icon: TrendingUp },
   { title: "About the App Builder", url: "/about", icon: Info },
 ];
 

@@ -14,6 +14,7 @@ import MyNotes from "./pages/MyNotes";
 import About from "./pages/About";
 import Syllabus from "./pages/Syllabus";
 import AnswerWriting from "./pages/AnswerWriting";
+import UPSCPredictor from "./pages/UPSCPredictor";
 import NotFoundTopic from "./pages/NotFoundTopic";
 import NotFound from "./pages/NotFound";
 
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/current-affairs" element={<CurrentAffairs />} />
               <Route path="/ai-tutor" element={<AITutor />} />
               <Route path="/my-notes" element={<MyNotes />} />
+              <Route path="/upsc-predictor" element={<UPSCPredictor />} />
               <Route path="/about" element={<About />} />
               <Route path="/quiz" element={<NotFoundTopic />} />
               
