@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Debug Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { display: flex; flex-direction: column; gap: 20px; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .response { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 15px; margin-top: 10px; }
+        .error { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Webhook Debug Tool</h1>
+        
+        <div>
+            <label for="webhook-url">Webhook URL:</label>
+            <input type="text" id="webhook-url" value="https://n8n.srv1019914.hstgr.cloud/webhook/lakshya" style="width: 100%; padding: 8px; margin-top: 5px;">
+        </div>
+        
+        <div>
+            <label for="message-input">Test Message:</label>
+            <textarea id="message-input" rows="3" placeholder="Enter your test message here...">What is GDP?</textarea>
+        </div>
+        
+        <button onclick="testWebhook()">Test Webhook</button>
+        
+        <div id="response-container"></div>
+    </div>
+
+    <script>
+        async function testWebhook() {
+            const webhookUrl = document.getElementById('webhook-url').value;
+            const message = document.getElementById('message-input').value;
+            const responseContainer = document.getElementById('response-container');
+            
+            if (!message.trim()) {
+                responseContainer.innerHTML = '<div class="response error">Please enter a message to test.</div>';
+                return;
+            }
+            
+            responseContainer.innerHTML = '<div class="response">Sending request...</div>';
+            
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        timestamp: new Date().toISOString(),
+                        source: 'debug-tool'
+                    }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                responseContainer.innerHTML = `
+                    <div class="response success">
+                        <h3>✅ Success!</h3>
+                        <h4>Response Status: ${response.status}</h4>
+                        <h4>Response Headers:</h4>
+                        <pre>${JSON.stringify(Object.fromEntries(response.headers), null, 2)}</pre>
+                        <h4>Response Body:</h4>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        
+                        <h4>Parsed Fields Found:</h4>
+                        <ul>
+                            ${data.output ? `<li><strong>data.output:</strong> ${data.output}</li>` : ''}
+                            ${data.response ? `<li><strong>data.response:</strong> ${data.response}</li>` : ''}
+                            ${data.message ? `<li><strong>data.message:</strong> ${data.message}</li>` : ''}
+                            ${data.answer ? `<li><strong>data.answer:</strong> ${data.answer}</li>` : ''}
+                            ${data.result ? `<li><strong>data.result:</strong> ${data.result}</li>` : ''}
+                            ${data.text ? `<li><strong>data.text:</strong> ${data.text}</li>` : ''}
+                            ${Object.keys(data).length === 0 ? '<li>No fields found in response</li>' : ''}
+                        </ul>
+                    </div>
+                `;
+                
+            } catch (error) {
+                responseContainer.innerHTML = `
+                    <div class="response error">
+                        <h3>❌ Error!</h3>
+                        <p><strong>Error message:</strong> ${error.message}</p>
+                        <p><strong>Full error:</strong></p>
+                        <pre>${error.stack || error}</pre>
+                    </div>
+                `;
+            }
+        }
+        
+        // Allow Enter key to trigger the test
+        document.getElementById('message-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                testWebhook();
+            }
+        });
+    </script>
+</body>
+</html>

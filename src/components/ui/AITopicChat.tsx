@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
+
+// Webhook configuration - production endpoint
+const WEBHOOK_URL = "https://n8n.srv1019914.hstgr.cloud/webhook/lakshya";
 
 interface Message {
   id: string;
@@ -27,15 +31,6 @@ const quickQuestions = [
   "Summarize the main points"
 ];
 
-const sampleResponses = {
-  "explain": "Here's a comprehensive explanation of the topic with key concepts, definitions, and important points that are relevant for UPSC preparation...",
-  "examples": "Let me provide you with recent examples and case studies that illustrate this topic effectively for your UPSC preparation...",
-  "issues": "The current issues and challenges related to this topic include several important aspects that you should be aware of for the exam...",
-  "relevance": "This topic is highly relevant for UPSC as it appears frequently in both Prelims and Mains. Here's how it connects to the syllabus...",
-  "questions": "Here are some practice questions based on this topic that will help you prepare for the UPSC exam...",
-  "summary": "Let me summarize the main points of this topic in a structured format that's easy to remember for your exam preparation..."
-};
-
 export function AITopicChat({ topic, subtopic }: AITopicChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -47,6 +42,7 @@ export function AITopicChat({ topic, subtopic }: AITopicChatProps) {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -59,28 +55,89 @@ export function AITopicChat({ topic, subtopic }: AITopicChatProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage;
     setInputMessage("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responseKey = inputMessage.toLowerCase().includes('explain') ? 'explain' :
-                         inputMessage.toLowerCase().includes('example') ? 'examples' :
-                         inputMessage.toLowerCase().includes('issue') ? 'issues' :
-                         inputMessage.toLowerCase().includes('relevant') ? 'relevance' :
-                         inputMessage.toLowerCase().includes('question') ? 'questions' :
-                         inputMessage.toLowerCase().includes('summary') ? 'summary' : 'explain';
+    try {
+      // Send to webhook
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          timestamp: new Date().toISOString(),
+          source: 'lakshya-ai-topic-chat',
+          topic: topic,
+          subtopic: subtopic
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Debug: Log the full response to console
+      console.log('AITopicChat webhook response:', data);
+      
+      // Enhanced response parsing to handle multiple possible structures
+      let aiContent = '';
+      
+      if (data.output) {
+        aiContent = data.output;
+      } else if (data.response) {
+        aiContent = data.response;
+      } else if (data.message) {
+        aiContent = data.message;
+      } else if (data.answer) {
+        aiContent = data.answer;
+      } else if (data.result) {
+        aiContent = data.result;
+      } else if (data.text) {
+        aiContent = data.text;
+      } else if (typeof data === 'string') {
+        aiContent = data;
+      } else {
+        // If none of the expected fields exist, show the full object as JSON
+        aiContent = JSON.stringify(data, null, 2);
+        console.warn('Unexpected response structure:', data);
+      }
+      
+      // Add AI response to chat
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: sampleResponses[responseKey as keyof typeof sampleResponses],
+        content: aiContent || 'I received your message and I\'m processing it.',
         timestamp: new Date()
       };
-
+      
       setMessages(prev => [...prev, aiMessage]);
+      
+    } catch (error) {
+      console.error('Error connecting to AI tutor:', error);
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'Sorry, I am facing some technical issues. Please try again shortly.',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "Connection Error",
+        description: "Unable to connect to AI tutor. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleQuickQuestion = (question: string) => {

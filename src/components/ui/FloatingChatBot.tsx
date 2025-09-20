@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 
-// Webhook configuration - easy to change for production
-const WEBHOOK_URL = "http://localhost:5678/webhook-test/lakshyaAI";
+// Webhook configuration - production endpoint
+const WEBHOOK_URL = "https://n8n.srv1019914.hstgr.cloud/webhook/lakshya";
 
 interface ChatMessage {
   id: string;
@@ -105,13 +105,36 @@ export function FloatingChatBot() {
 
       const data = await response.json();
 
-      const aiContent = formatN8nResponse(data);
+      // Debug: Log the full response to console
+      console.log('FloatingChatBot webhook response:', data);
+
+      // Enhanced response parsing to handle multiple possible structures
+      let aiContent = '';
+      
+      if (data.output) {
+        aiContent = data.output;
+      } else if (data.response) {
+        aiContent = data.response;
+      } else if (data.message) {
+        aiContent = data.message;
+      } else if (data.answer) {
+        aiContent = data.answer;
+      } else if (data.result) {
+        aiContent = data.result;
+      } else if (data.text) {
+        aiContent = data.text;
+      } else if (typeof data === 'string') {
+        aiContent = data;
+      } else {
+        // Try to use the existing formatN8nResponse function as fallback
+        aiContent = formatN8nResponse(data);
+      }
       
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiContent,
+        content: aiContent || 'I received your message and I\'m processing it.',
         timestamp: new Date()
       };
       
@@ -124,7 +147,7 @@ export function FloatingChatBot() {
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: 'The AI tutor is unavailable right now. Please try again later.',
+        content: 'Sorry, I am facing some technical issues. Please try again shortly.',
         timestamp: new Date()
       };
       
@@ -173,14 +196,37 @@ export function FloatingChatBot() {
       }
 
       const data = await response.json();
+
+      // Debug: Log the full response to console
+      console.log('FloatingChatBot quick question webhook response:', data);
+
+      // Enhanced response parsing to handle multiple possible structures
+      let aiContent = '';
       
-      const aiContent = formatN8nResponse(data);
+      if (data.output) {
+        aiContent = data.output;
+      } else if (data.response) {
+        aiContent = data.response;
+      } else if (data.message) {
+        aiContent = data.message;
+      } else if (data.answer) {
+        aiContent = data.answer;
+      } else if (data.result) {
+        aiContent = data.result;
+      } else if (data.text) {
+        aiContent = data.text;
+      } else if (typeof data === 'string') {
+        aiContent = data;
+      } else {
+        // Try to use the existing formatN8nResponse function as fallback
+        aiContent = formatN8nResponse(data);
+      }
       
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiContent,
+        content: aiContent || 'I received your message and I\'m processing it.',
         timestamp: new Date()
       };
       
@@ -193,7 +239,7 @@ export function FloatingChatBot() {
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: 'The AI tutor is unavailable right now. Please try again later.',
+        content: 'Sorry, I am facing some technical issues. Please try again shortly.',
         timestamp: new Date()
       };
       

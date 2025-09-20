@@ -17,8 +17,8 @@ import {
   User
 } from "lucide-react";
 
-// Webhook configuration - easy to change for production
-const WEBHOOK_URL = "http://localhost:5678/webhook-test/lakshyaAI";
+// Webhook configuration - production endpoint
+const WEBHOOK_URL = "https://n8n.srv1019914.hstgr.cloud/webhook/lakshya";
 
 interface ChatMessage {
   id: string;
@@ -85,11 +85,37 @@ export default function AITutor() {
 
       const data = await response.json();
       
+      // Debug: Log the full response to console
+      console.log('Webhook response:', data);
+      
+      // Enhanced response parsing to handle multiple possible structures
+      let aiContent = '';
+      
+      if (data.output) {
+        aiContent = data.output;
+      } else if (data.response) {
+        aiContent = data.response;
+      } else if (data.message) {
+        aiContent = data.message;
+      } else if (data.answer) {
+        aiContent = data.answer;
+      } else if (data.result) {
+        aiContent = data.result;
+      } else if (data.text) {
+        aiContent = data.text;
+      } else if (typeof data === 'string') {
+        aiContent = data;
+      } else {
+        // If none of the expected fields exist, show the full object as JSON
+        aiContent = JSON.stringify(data, null, 2);
+        console.warn('Unexpected response structure:', data);
+      }
+      
       // Add AI response to chat
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: data.response || data.message || 'I received your message and I\'m processing it.',
+        content: aiContent || 'I received your message and I\'m processing it.',
         timestamp: new Date()
       };
       
@@ -102,7 +128,7 @@ export default function AITutor() {
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: 'The AI tutor is unavailable right now. Please try again later.',
+        content: 'Sorry, I am facing some technical issues. Please try again shortly.',
         timestamp: new Date()
       };
       
